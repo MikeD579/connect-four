@@ -1,6 +1,6 @@
 <template>
   <div>
-    <connect-four />
+    <ConnectFour />
   </div>
 </template>
 

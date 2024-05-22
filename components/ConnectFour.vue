@@ -1,14 +1,20 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import DraggableItem from './Draggable/DraggableItem.vue';
+</script>
 
 <template>
   <div class="container">
-    <div class=" token player-one"></div>
+    <DraggableItem>
+      <div class=" token player-one"></div>
+    </DraggableItem>
 
     <div class="board">
       <div v-for="i in 42" class="holes"></div>
     </div>
 
-    <div class=" token player-two"></div>
+    <DraggableItem>
+      <div class=" token player-two"></div>
+    </DraggableItem>
   </div>
 </template>
 
