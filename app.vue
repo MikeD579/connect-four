@@ -4,8 +4,8 @@
   </div>
 </template>
 
-<stype lang="css">
+<style>
 body {
   background-color: #3C3E46;
 }
-</stype>
+</style>
