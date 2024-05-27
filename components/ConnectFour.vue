@@ -1,20 +1,28 @@
 <script lang="ts" setup>
 import DraggableItem from './Draggable/DraggableItem.vue';
+
+const drag = useDragNDrop();
+
+
 </script>
 
 <template>
   <div class="container">
-    <DraggableItem>
-      <div class=" token player-one"></div>
-    </DraggableItem>
-
-    <div class="board">
-      <div v-for="i in 42" class="holes"></div>
+    <div class="player-container">
+      <div v-if="true" class="turn"> Your Turn </div>
+      <DraggableItem>
+        <div class=" token player-one"></div>
+      </DraggableItem>
     </div>
 
-    <DraggableItem>
-      <div class=" token player-two"></div>
-    </DraggableItem>
+    <Grid />
+
+    <div class="player-container">
+      <div v-if="false" class="turn"> Your Turn </div>
+      <DraggableItem>
+        <div class=" token player-two"></div>
+      </DraggableItem>
+    </div>
   </div>
 </template>
 
@@ -30,6 +38,22 @@ import DraggableItem from './Draggable/DraggableItem.vue';
   align-items: center;
 }
 
+.player-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.turn {
+  position: absolute;
+  top: -5rem;
+  font-family: sans-serif;
+  font-weight: 600;
+  color: #D9D9D9;
+  padding: 2rem;
+}
+
 .token {
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.35);
   width: 95px;
@@ -43,31 +67,5 @@ import DraggableItem from './Draggable/DraggableItem.vue';
 
 .player-two {
   background-color: #E0CF34;
-}
-
-.board {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 34px;
-  row-gap: 30px;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 0;
-
-  background-color: #D9D9D9;
-  border-radius: 10px;
-  width: 938px;
-  max-height: 788px;
-
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.35);
-}
-
-.holes {
-  background-color: #3C3E46;
-  width: 95px;
-  height: 95px;
-  border-radius: 95px;
-  clip-path: circle(50%);
-  box-shadow: inset 0 -4px 10px rgba(0, 0, 0, 0.35);
 }
 </style>
