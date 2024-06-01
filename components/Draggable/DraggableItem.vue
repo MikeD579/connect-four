@@ -13,8 +13,6 @@ const movableObj = ref(null);
 
 const dragOffset = ref({ x: 0, y: 0 });
 
-const { contentData } = defineProps();
-
 const emit = defineEmits();
 
 watch(dragOffset, (val) => {
@@ -67,15 +65,15 @@ const onDragEnd = (event) => {
     document.body.removeChild(movableObj.value);
     movableObj.value = null;
     document.body.style.cursor = 'initial';
-    // draggedItem.value.style.opacity = '1';
+    draggedItem.value ? draggedItem.value.style.opacity = '1' : null;
     emit('drop');
 }
 
 const onDragStart = (event) => {
     if (draggedItem.value !== null && !drag.value.isDragging) {
         drag.value.isDragging = true;
-        drag.value.draggedData = contentData;
-        // draggedItem.value.style.opacity = '0.9';
+        drag.value.draggedData = draggedItem;
+        draggedItem.value.style.opacity = '0.5';
         cloneEl();
         window.addEventListener('mouseup', onDragEnd)
     }
