@@ -1,11 +1,9 @@
 <template>
     <div class="board">
-        <div v-for="colIndex in 7" class="holes-col" @mouseenter="setDraggingOverCol(colIndex)"
-            @mouseleave="resetDraggingOverCol" @mouseup="addItem(colIndex)">
-            <div v-for="holeIndex in 6">
-                <GridItem :key="holeIndex">
-                    <!-- <div v-if="holeIndex === 3 && colIndex === 3 && "> hello</div> -->
-                </GridItem>
+        <div v-for="e, colIndex in 7" class="holes-col" ref='columns' @mouseenter="enterDraggingOverCol(colIndex)"
+            @mouseleave="leaveDraggingOverCol(colIndex)" @mouseup="addItem(colIndex)">
+            <div v-for="e, holeIndex in 6" ref="holes">
+                <GridItem :key="holeIndex" />
             </div>
         </div>
     </div>
@@ -13,26 +11,84 @@
 
 <script setup>
 const drag = useDragNDrop();
+const columns = ref(null);
 
-const showingItems = ref([])
-
-const setDraggingOverCol = (index) => {
-    if (!drag.value.isDragging) return;
+// event listener callbacks
+const enterDraggingOverCol = (index) => {
+    if (!drag.value.isDragging || drag.value.draggingOverColumn !== null) return;
     drag.value.draggingOverColumn = index;
+
+    if (drag.value.draggedData && columns.value) {
+        const bottomHole = getOpenHoleForCol(index)
+        if (!bottomHole) {
+            drag.value.draggingOverColumn = null
+            return
+        }
+
+        drag.value.previousData = bottomHole
+
+        const token = drag.value.draggedData.cloneNode(true)
+
+        bottomHole.replaceWith(token)
+    }
 }
-const resetDraggingOverCol = () => {
-    if (!drag.value.isDragging) return;
+const leaveDraggingOverCol = (index) => {
+    if (!drag.value.isDragging || drag.value.draggingOverColumn === null) return;
+
+
+    if (drag.value.draggedData && columns.value) {
+        const bottomHole = getTakenHoleForCol(drag.value.draggingOverColumn)
+        if (!bottomHole) return
+        bottomHole.replaceWith(drag.value.previousData)
+    }
+
     drag.value.draggingOverColumn = null;
 }
 const addItem = (index) => {
     if (!drag.value.isDragging ||
         !drag.value.draggedData ||
-        drag.value.draggingOverColumn !== index
+        drag.value.draggingOverColumn !== index ||
+        !columns.value
     ) return;
 
-    console.log('drag', drag.value.draggedData)
+    const bottomHole = getTakenHoleForCol(index)
+    drag.value.draggingOverColumn = null
+    if (!bottomHole) return
+    bottomHole.style.opacity = 1
+}
 
-    showingItems.value.push(drag.value.draggedData)
+// methods
+const getOpenHoleForCol = (colIndex) => {
+    const columnChildren = columns.value[colIndex].children
+
+    const holes = [...columnChildren]
+    if (holes[0].className === 'draggable-item') return null
+
+    const reverseHoles = holes.reverse()
+    for (const hole of reverseHoles) {
+        if (hole.className !== 'draggable-item') {
+            return hole
+        }
+    }
+
+    return -1
+}
+const getTakenHoleForCol = (colIndex) => {
+    const columnChildren = columns.value[colIndex].children
+    const holes = [...columnChildren]
+
+    console.log(holes[0].style.opacity)
+
+    if (holes[0].style.opacity === '0.5') return holes[0]
+
+    if (holes[0].className === 'draggable-item') return null
+
+    for (const hole of holes) {
+        if (hole.className === 'draggable-item') {
+            return hole
+        }
+    }
+
 }
 </script>
 

@@ -3,4 +3,5 @@ export const useDragNDrop = () => useState('drag-n-drop', () => ({
   isDragging: false,
   draggingOverColumn: null,
   draggedData: null,
+  previousData: null,
 }))

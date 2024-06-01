@@ -43,6 +43,7 @@ const drag = useDragNDrop();
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .turn {
@@ -55,6 +56,7 @@ const drag = useDragNDrop();
 }
 
 .token {
+  margin: .5rem .75rem;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.35);
   width: 95px;
   height: 95px;
