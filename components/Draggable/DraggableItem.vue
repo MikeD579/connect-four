@@ -76,10 +76,6 @@ const onDragStart = (event) => {
         draggedItem.value.style.opacity = '0.5';
         cloneEl();
         window.addEventListener('mouseup', onDragEnd)
-
-        // create element on closest column
-        // track where the mouse and if that matches the column
-        // 
     }
 }
 

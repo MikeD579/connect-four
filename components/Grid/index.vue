@@ -77,8 +77,6 @@ const getTakenHoleForCol = (colIndex) => {
     const columnChildren = columns.value[colIndex].children
     const holes = [...columnChildren]
 
-    console.log(holes[0].style.opacity)
-
     if (holes[0].style.opacity === '0.5') return holes[0]
 
     if (holes[0].className === 'draggable-item') return null
