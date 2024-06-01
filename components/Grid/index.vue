@@ -117,11 +117,6 @@ const getTakenHoleForCol = (colIndex) => {
 
 }
 
-.holes-col:hover {
-    border-color: red;
-
-}
-
 .holes {
     margin: .5rem .75rem;
     background-color: #3C3E46;
