@@ -1,9 +1,11 @@
 <template>
-    <slot>
-        <div class="holes" />
-    </slot>
+    <div>
+        <slot>
+            <div class="holes" />
+        </slot>
+    </div>
 </template>
 
 <script setup>
-const { tokens } = defineProps();
+
 </script>

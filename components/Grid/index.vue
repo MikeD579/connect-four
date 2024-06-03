@@ -3,7 +3,7 @@
         <div v-for="e, colIndex in 7" class="holes-col" ref='columns' @mouseenter="enterDraggingOverCol(colIndex)"
             @mouseleave="leaveDraggingOverCol(colIndex)" @mouseup="addItem(colIndex)">
             <div v-for="e, holeIndex in 6" ref="holes">
-                <GridItem :key="holeIndex" />
+                <GridItem :key="`${colIndex}${holeIndex}`" :id="`${colIndex}${holeIndex}`" />
             </div>
         </div>
     </div>
@@ -28,6 +28,7 @@ const enterDraggingOverCol = (index) => {
         drag.value.previousData = bottomHole
 
         const token = drag.value.draggedData.cloneNode(true)
+        token.id = bottomHole.firstChild.id
 
         bottomHole.replaceWith(token)
     }
@@ -54,7 +55,12 @@ const addItem = (index) => {
     const bottomHole = getTakenHoleForCol(index)
     drag.value.draggingOverColumn = null
     if (!bottomHole) return
+
     bottomHole.style.opacity = 1
+    if (checkWin(bottomHole)) {
+        const player = bottomHole.firstElementChild.className.split(' ')[1]
+        console.log(player, 'you win!')
+    }
 }
 
 // methods
@@ -87,6 +93,110 @@ const getTakenHoleForCol = (colIndex) => {
         }
     }
 
+}
+
+// check if player won the game
+const checkWin = (hole) => {
+    const col = parseInt(hole.id[0])
+    const row = parseInt(hole.id[1])
+    const player = hole.firstElementChild.className.split(' ')[1]
+
+    //check vertical
+    if (hasWonVertically(player, col, row)) {
+        return true
+    }
+    //check horizontal
+    if (hasWonHorizontally(player, col, row)) {
+        return true
+    }
+
+    //check diagnal
+    if (hasWonDiagonally(player, col, row)) {
+        return true
+    }
+
+    return false
+}
+const hasWonVertically = (player, col, row) => {
+    // dont check up ; there will never be one above
+    // check down
+    if (countTokens(player, col, row, 1, true) === 3) {
+        return true
+    }
+
+    return false
+}
+const hasWonHorizontally = (player, col, row) => {
+    const leftTokens = countTokens(player, col, row, -1)
+    const rightTokens = countTokens(player, col, row, 1)
+
+    if (leftTokens + rightTokens === 3) {
+        return true
+    }
+
+    return false
+}
+const hasWonDiagonally = (player, col, row) => {
+    const positiveLTRCount = countDiagonalTokens(player, col, row, 1)
+    const positiveRTLCount = countDiagonalTokens(player, col, row, -1)
+
+    if (positiveLTRCount + positiveRTLCount === 3) return true
+
+    const negativeLTRCount = countDiagonalTokens(player, col, row, 1, -1)
+    const negativeRTLCount = countDiagonalTokens(player, col, row, -1, -1)
+
+    if (negativeLTRCount + negativeRTLCount === 3) return true
+}
+
+// Recursive helper function
+const countTokens = (player, col, row, direction, useRow = false, count = 0) => {
+    // direction is either +1 or -1
+    // if useRow is true, then column will be constant
+    let nextCol = col + direction
+    let nextRow = row
+    let nextIndex = addIndex(col, row, direction, 0)
+
+    if (useRow) {
+        nextCol = col
+        nextRow = row + direction
+        nextIndex = addIndex(col, row, 0, direction)
+    }
+
+    if (!nextIndex) return count
+
+    const nextToken = document.getElementById(nextIndex)?.firstElementChild?.className
+    if (!nextToken.includes(player)) {
+        return count
+    }
+
+    return countTokens(player, nextCol, nextRow, direction, useRow, count + 1)
+
+}
+const countDiagonalTokens = (player, col, row, direction, slope = 1, count = 0) => {
+    // direction is either +1 or -1
+    // multiply row times slop
+    const nextCol = col + direction
+    const nextRow = row + (direction * slope)
+    const nextIndex = addIndex(col, row, direction, (direction * slope))
+
+    if (!nextIndex) return count
+
+    const nextToken = document.getElementById(nextIndex)?.firstElementChild?.className
+    if (!nextToken.includes(player)) {
+        return count
+    }
+
+    return countDiagonalTokens(player, nextCol, nextRow, direction, slope, count + 1)
+}
+const addIndex = (col, row, addColBy, addRowBy) => {
+    col += addColBy
+    row += addRowBy
+
+    if (col < 0 || col > 6 || row < 0 || row > 5) {
+        return null;
+    }
+
+    return `${col}${row}`
 }
 </script>
 
