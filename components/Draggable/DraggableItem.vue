@@ -13,6 +13,8 @@ const movableObj = ref(null);
 
 const dragOffset = ref({ x: 0, y: 0 });
 
+const props = defineProps(['disabled'])
+
 const emit = defineEmits();
 
 watch(dragOffset, (val) => {
@@ -82,6 +84,7 @@ const onDragStart = (event) => {
 const originalPointerPosition = ref({ x: 0, y: 0 });
 
 const watchDrag = (event) => {
+    if (props.disabled) return;
     originalPointerPosition.value = {
         x: event.clientX,
         y: event.clientY,

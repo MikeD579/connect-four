@@ -13,6 +13,8 @@
 const drag = useDragNDrop();
 const columns = ref(null);
 
+const emit = defineEmits(['token-placed'])
+
 // event listener callbacks
 const enterDraggingOverCol = (index) => {
     if (!drag.value.isDragging || drag.value.draggingOverColumn !== null) return;
@@ -56,6 +58,7 @@ const addItem = (index) => {
     drag.value.draggingOverColumn = null
     if (!bottomHole) return
 
+    emit('token-placed')
     bottomHole.style.opacity = 1
     if (checkWin(bottomHole)) {
         const player = bottomHole.firstElementChild.className.split(' ')[1]
@@ -174,7 +177,7 @@ const countTokens = (player, col, row, direction, useRow = false, count = 0) => 
 }
 const countDiagonalTokens = (player, col, row, direction, slope = 1, count = 0) => {
     // direction is either +1 or -1
-    // multiply row times slop
+    // multiply row times slop, either 1 or -1
     const nextCol = col + direction
     const nextRow = row + (direction * slope)
     const nextIndex = addIndex(col, row, direction, (direction * slope))

@@ -1,30 +1,34 @@
-<script lang="ts" setup>
-import DraggableItem from './Draggable/DraggableItem.vue';
-
-const drag = useDragNDrop();
-
-
-</script>
-
 <template>
   <div class="container">
     <div class="player-container">
-      <div v-if="true" class="turn"> Your Turn </div>
-      <DraggableItem>
+      <div v-if="playerOneTurn" class="turn">
+        <SvgDownArrow />
+      </div>
+      <DraggableItem :disabled="!playerOneTurn">
         <div class=" token player-one"></div>
       </DraggableItem>
     </div>
 
-    <Grid />
+    <Grid @token-placed="switchTurns" />
 
     <div class="player-container">
-      <div v-if="false" class="turn"> Your Turn </div>
-      <DraggableItem>
+      <div v-if="!playerOneTurn" class="turn">
+        <SvgDownArrow />
+      </div>
+      <DraggableItem :disabled="playerOneTurn">
         <div class=" token player-two"></div>
       </DraggableItem>
     </div>
   </div>
 </template>
+
+<script setup>
+const playerOneTurn = ref(true)
+
+const switchTurns = () => {
+  playerOneTurn.value = !playerOneTurn.value
+}
+</script>
 
 <style scoped>
 .container {
@@ -47,13 +51,30 @@ const drag = useDragNDrop();
 }
 
 .turn {
+  animation: MoveUpDown 1s linear 1;
   position: absolute;
-  top: -5rem;
-  font-family: sans-serif;
-  font-weight: 600;
-  color: #D9D9D9;
-  padding: 2rem;
+  top: -2rem;
+
+  margin-left: auto;
+  margin-right: auto;
 }
+
+.turn:hover {
+  animation: MoveUpDown 1s linear 1;
+}
+
+@keyframes MoveUpDown {
+
+  0%,
+  100% {
+    top: -2rem;
+  }
+
+  50% {
+    top: -3rem;
+  }
+}
+
 
 .token {
   margin: .5rem .75rem;
