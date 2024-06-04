@@ -13,7 +13,7 @@
 const drag = useDragNDrop();
 const columns = ref(null);
 
-const emit = defineEmits(['token-placed'])
+const emit = defineEmits(['token-placed', 'player-win'])
 
 // event listener callbacks
 const enterDraggingOverCol = (index) => {
@@ -62,7 +62,7 @@ const addItem = (index) => {
     bottomHole.style.opacity = 1
     if (checkWin(bottomHole)) {
         const player = bottomHole.firstElementChild.className.split(' ')[1]
-        console.log(player, 'you win!')
+        emit('player-win', { player: player })
     }
 }
 

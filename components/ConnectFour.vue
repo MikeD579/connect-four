@@ -1,32 +1,48 @@
 <template>
-  <div class="container">
-    <div class="player-container">
-      <div v-if="playerOneTurn" class="turn">
-        <SvgDownArrow />
+  <div>
+    <div class="container">
+      <div class="player-container">
+        <div v-if="playerOneTurn" class="turn">
+          <SvgDownArrow />
+        </div>
+        <DraggableItem :disabled="!playerOneTurn">
+          <div class=" token player-one"></div>
+        </DraggableItem>
       </div>
-      <DraggableItem :disabled="!playerOneTurn">
-        <div class=" token player-one"></div>
-      </DraggableItem>
-    </div>
 
-    <Grid @token-placed="switchTurns" />
+      <Grid @token-placed="switchTurns" @player-win="showModalWin" />
 
-    <div class="player-container">
-      <div v-if="!playerOneTurn" class="turn">
-        <SvgDownArrow />
+      <div class="player-container">
+        <div v-if="!playerOneTurn" class="turn">
+          <SvgDownArrow />
+        </div>
+        <DraggableItem :disabled="playerOneTurn">
+          <div class=" token player-two"></div>
+        </DraggableItem>
       </div>
-      <DraggableItem :disabled="playerOneTurn">
-        <div class=" token player-two"></div>
-      </DraggableItem>
     </div>
+    <ModalWin v-if="showWin" v-model="showWin" :player="player" @play-again="reset" />
   </div>
 </template>
 
 <script setup>
+const showWin = ref(false)
+
+const player = ref(null)
+
 const playerOneTurn = ref(true)
 
 const switchTurns = () => {
   playerOneTurn.value = !playerOneTurn.value
+}
+
+const showModalWin = ({ player: playerClass }) => {
+  player.value = playerClass
+  showWin.value = true
+}
+
+const reset = () => {
+  reloadNuxtApp()
 }
 </script>
 
